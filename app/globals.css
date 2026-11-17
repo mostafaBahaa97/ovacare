@@ -1,0 +1,10 @@
+@import "tailwindcss";
+:root { --primary:#e11d74; --primary-fg:#fff; --bg:#fbf8f9; }
+body { background:var(--bg); color:#1e293b; }
+.btn { display:inline-flex; gap:.4rem; align-items:center; padding:.5rem 1rem; border-radius:.6rem; background:var(--primary); color:var(--primary-fg); font-weight:600; }
+.btn-o { background:#fff; color:var(--primary); border:1px solid var(--primary); }
+.card { background:#fff; border-radius:1rem; border:1px solid #0001; padding:1rem; }
+.inp { width:100%; border:1px solid #cbd5e1; border-radius:.6rem; padding:.5rem .7rem; background:#fff; }
+.inp:focus { outline:2px solid var(--primary); }
+.pill { border-radius:999px; padding:.2rem .8rem; background:color-mix(in srgb,var(--primary) 12%,white); color:var(--primary); font-weight:600; }
+@media print { .no-print { display:none !important; } body { background:#fff; } .print-area { position:static !important; box-shadow:none !important; } @page { size:A5; margin:10mm; } }
