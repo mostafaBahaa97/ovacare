@@ -8,3 +8,9 @@ body { background:var(--bg); color:#1e293b; }
 .inp:focus { outline:2px solid var(--primary); }
 .pill { border-radius:999px; padding:.2rem .8rem; background:color-mix(in srgb,var(--primary) 12%,white); color:var(--primary); font-weight:600; }
 @media print { .no-print { display:none !important; } body { background:#fff; } .print-area { position:static !important; box-shadow:none !important; } @page { size:A5; margin:10mm; } }
+:root { --bg:#F8FAFC; }
+.card { background:#fff; border-radius:1rem; border:1px solid rgb(226 232 240 / .7); padding:1rem; box-shadow:0 1px 2px #0f172a0a, 0 6px 20px #0f172a08; }
+.inp { border:1px solid #e2e8f0; border-radius:.75rem; padding:.55rem .8rem; transition:box-shadow .15s, border-color .15s; }
+.btn, .seg { transition:all .15s; }
+.seg { padding:.35rem .85rem; border-radius:999px; border:1px solid #e2e8f0; background:#fff; font-size:.85rem; }
+.seg[aria-pressed="true"] { background:var(--primary); color:var(--primary-fg); border-color:var(--primary); }

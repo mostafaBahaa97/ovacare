@@ -1,9 +1,12 @@
-export default function OvaCareLogo({ size = 40 }: { size?: number }) {
+import { HEART, PETAL } from '@/lib/emblem';
+// Lotus/cradling-heart emblem + pearl, with the OvaCare wordmark. Colors follow the active theme.
+export default function OvaCareLogo({ size = 40, wordmark = true, className = '' }: { size?: number; wordmark?: boolean; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="var(--primary)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-label="OvaCare">
-      <path d="M32 50C20 44 12 34 14 22c8 0 14 5 18 12 4-7 10-12 18-12 2 12-6 22-18 28z" />
-      <path d="M32 34V14" /><path d="M32 22c-5-1-8-4-9-8 5 0 8 3 9 8zM32 22c5-1 8-4 9-8-5 0-8 3-9 8z" fill="var(--primary)" fillOpacity=".18" />
-      <path d="M8 56h12l4-6 6 10 5-8 3 4h18" strokeWidth="2.5" />
-    </svg>
+    <span className={`inline-flex items-center gap-2 ${className}`} dir="ltr" aria-label="OvaCare">
+      <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="var(--primary)" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d={HEART} /><path d={PETAL} fill="var(--primary)" fillOpacity=".18" /><circle cx="32" cy="40" r="4" fill="var(--primary)" stroke="none" />
+      </svg>
+      {wordmark && <span style={{ fontSize: size * 0.56, lineHeight: 1, letterSpacing: '-0.02em' }} className="font-bold"><span style={{ color: 'var(--primary)' }}>Ova</span><span className="text-slate-700">Care</span></span>}
+    </span>
   );
 }

@@ -11,3 +11,11 @@ app/{layout,page,globals.css} app/patients/[id]/page.tsx app/settings/page.tsx a
 5. Set SESSION_SECRET (openssl rand -base64 48) locally and on Vercel. Without it every /api call except login fails.
 Security: sessions are HMAC-signed HTTP-only cookies (7 days). middleware.ts returns 401 for every /api route except /api/auth and /api/branding.
 Logo: uploaded images are resized/compressed in the browser to fit one Sheets cell (<45k chars).
+
+## v3: Offline-first PWA
+- Data lives in IndexedDB (`localCache` snapshot + `syncQueue`). The service worker (`public/sw.js`) caches ONLY the app shell, never `/api/*`. Logout wipes IndexedDB (asks first if edits are unsynced).
+- `POST /api/sync` takes a batch of queued ops and upserts by UUID (idempotent); `GET /api/sync` returns the snapshot. An expired cookie (401) pauses the queue and opens the re-login modal; nothing is deleted.
+- `Visits.fetalData` is added to an existing sheet automatically on first request.
+- Public API paths in middleware: /api/auth, /api/branding, /api/manifest.webmanifest, /api/icon. No new env vars.
+- The service worker registers only in production: test with `npm run build && npm start`, then DevTools > Network > Offline.
+- Patient file route changed to `/patients?id=<uuid|new>` so it can be served offline.

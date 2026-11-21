@@ -3,13 +3,14 @@ import { Printer, MessageCircle, X } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import OvaCareLogo from './OvaCareLogo';
 import { pregnancy, gaText } from '@/lib/medical';
+import { waNumber } from '@/lib/phone';
 export default function PrescriptionModal({ patient, visit, onClose }: any) {
   const { settings: s } = useApp();
   const ga = gaText(pregnancy(patient.lmpDate));
   const date = new Date(visit.visitDate || Date.now()).toLocaleDateString('ar-EG');
   const meds = (visit.prescribedMedications || '').split('\n').filter(Boolean);
   const wa = () => {
-    let ph = (patient.phone || '').replace(/\D/g, ''); if (ph.startsWith('0')) ph = '20' + ph.slice(1);
+    const ph = waNumber(patient.phone);
     const t = [`*${s.doctorName || 'OvaCare'}*`, s.clinicTitle, `المريضة: ${patient.name}`, `التاريخ: ${date}`, ga && `GA: ${ga}`, '', '*Rx:*', ...meds.map((m: string, i: number) => `${i + 1}. ${m}`),
       visit.nextVisitRequests && `\n*المطلوب للزيارة القادمة:*\n${visit.nextVisitRequests}`].filter((x) => x !== '' && x !== false && x !== undefined).join('\n');
     window.open(`https://wa.me/${ph}?text=${encodeURIComponent(t)}`, '_blank');
