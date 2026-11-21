@@ -22,20 +22,23 @@ export default function PrescriptionModal({ patient, visit, onClose }: any) {
         <button className="btn btn-o" onClick={wa}><MessageCircle size={18} />واتساب</button>
         <button className="btn btn-o ms-auto" onClick={onClose}><X size={18} /></button>
       </div>
-      <div className="print-area max-w-2xl mx-auto bg-white rounded-xl p-8 min-h-[60vh] flex flex-col">
-        <header className="flex items-center gap-4 border-b-2 pb-4" style={{ borderColor: 'var(--primary)' }}>
-          {s.clinicLogoUrl ? <img src={s.clinicLogoUrl} alt="" className="h-14 w-14 object-contain" /> : <OvaCareLogo size={56} />}
-          <div><h1 className="text-xl font-bold" style={{ color: 'var(--primary)' }}>{s.doctorName || 'OvaCare'}</h1><p className="text-sm text-slate-600">{s.clinicTitle}</p></div>
-        </header>
-        <div className="grid grid-cols-2 gap-2 py-3 text-sm">
-          <div>الاسم: <b>{patient.name}</b></div><div>التاريخ: {date}</div>
-          <div>السن: {patient.age || '—'}</div><div dir="ltr" className="text-right">{ga && `GA: ${ga}`}</div>
+      <div className="print-area relative max-w-2xl mx-auto bg-white rounded-xl p-8 min-h-[60vh] flex flex-col">
+        <img src="/OIP.webp" alt="" aria-hidden="true" className="pointer-events-none absolute inset-0 m-auto h-64 w-64 object-contain opacity-10" />
+        <div className="relative z-10 flex flex-1 flex-col">
+          <header className="flex items-center gap-4 border-b-2 pb-4" style={{ borderColor: 'var(--primary)' }}>
+            {s.clinicLogoUrl ? <img src={s.clinicLogoUrl} alt="" className="h-14 w-14 object-contain" /> : <OvaCareLogo size={56} />}
+            <div><h1 className="text-xl font-bold" style={{ color: 'var(--primary)' }}>{s.doctorName || 'OvaCare'}</h1><p className="text-sm text-slate-600">{s.clinicTitle}</p></div>
+          </header>
+          <div className="grid grid-cols-2 gap-2 py-3 text-sm">
+            <div>الاسم: <b>{patient.name}</b></div><div>التاريخ: {date}</div>
+            <div>السن: {patient.age || '—'}</div><div dir="ltr" className="text-right">{ga && `GA: ${ga}`}</div>
+          </div>
+          <div className="flex-1"><div className="text-3xl font-serif" style={{ color: 'var(--primary)' }} dir="ltr">Rx</div>
+            <ol className="list-decimal ps-6 space-y-2 mt-2">{meds.map((m: string, i: number) => <li key={i}>{m}</li>)}</ol>
+            {visit.nextVisitRequests && <div className="mt-6 rounded-lg p-3 bg-slate-50"><b>المطلوب للزيارة القادمة:</b><p className="whitespace-pre-line">{visit.nextVisitRequests}</p></div>}
+          </div>
+          <footer className="border-t pt-2 mt-6 text-center text-xs text-slate-500">{s.doctorName} — {s.clinicTitle}</footer>
         </div>
-        <div className="flex-1"><div className="text-3xl font-serif" style={{ color: 'var(--primary)' }} dir="ltr">Rx</div>
-          <ol className="list-decimal ps-6 space-y-2 mt-2">{meds.map((m: string, i: number) => <li key={i}>{m}</li>)}</ol>
-          {visit.nextVisitRequests && <div className="mt-6 rounded-lg p-3 bg-slate-50"><b>المطلوب للزيارة القادمة:</b><p className="whitespace-pre-line">{visit.nextVisitRequests}</p></div>}
-        </div>
-        <footer className="border-t pt-2 mt-6 text-center text-xs text-slate-500">{s.doctorName} — {s.clinicTitle}</footer>
       </div>
     </div>
   );
