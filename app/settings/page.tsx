@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { ImagePlus } from 'lucide-react';
 import OvaCareLogo from '@/components/OvaCareLogo';
 import { compressLogo } from '@/lib/image';
-import { exportCsv, exportJson } from '@/lib/backup';
+import { exportClinicExcel } from '@/lib/exportExcel';
 import { useApp, THEMES } from '@/context/AppContext';
 export default function SettingsPage() {
-  const { settings, saveSettings, authed, checking, patients, visits } = useApp(); const [f, setF] = useState<any>({}); const [saved, setSaved] = useState(false); const [logoErr, setLogoErr] = useState(''); const [err, setErr] = useState('');
+  const { settings, saveSettings, authed, checking, patients, visits } = useApp(); const [f, setF] = useState<any>({}); const [saved, setSaved] = useState(false); const [logoErr, setLogoErr] = useState(''); const [err, setErr] = useState(''); const [incPriv, setIncPriv] = useState(false); const [xBusy, setXBusy] = useState(false); const [xErr, setXErr] = useState('');
   const onLogo = async (e: any) => { const file = e.target.files?.[0]; if (!file) return; try { setLogoErr(''); setF({ ...f, clinicLogoUrl: await compressLogo(file) }); } catch (x: any) { setLogoErr(x.message); } e.target.value = ''; };
   useEffect(() => setF((o: any) => ({ ...settings, ...o })), [settings]);
   const i = (k: string, label: string, extra: any = {}) => (<label className="block"><span className="text-sm">{label}</span><input className="inp" value={f[k] ?? ''} onChange={(e) => setF({ ...f, [k]: e.target.value })} {...extra} /></label>);
@@ -18,5 +18,7 @@ export default function SettingsPage() {
       <div className="flex gap-3">{Object.entries(THEMES).map(([k, c]) => (<button key={k} aria-label={k} onClick={() => setF({ ...f, themeColor: k })} className="h-9 w-9 rounded-full" style={{ background: c, outline: f.themeColor === k ? '3px solid #0006' : 'none', outlineOffset: 2 }} />))}</div></div>
     <div className="card space-y-3"><h2 className="font-bold">بيانات الدخول</h2>{i('username', 'اسم المستخدم', { dir: 'ltr' })}{i('password', 'كلمة مرور جديدة (اتركيها فارغة بدون تغيير)', { dir: 'ltr', type: 'password', value: f.newPassword ?? '', onChange: (e: any) => setF({ ...f, newPassword: e.target.value }) })}</div>
     <button className="btn" onClick={async () => { const { newPassword, password, ...rest } = f; try { setErr(''); await saveSettings({ ...rest, ...(newPassword ? { password: newPassword } : {}) }); setSaved(true); } catch (x: any) { setErr(x.message); } }}>حفظ الإعدادات</button>{saved && <span className="ms-3 text-green-700">تم الحفظ</span>}{err && <p className="text-red-600 text-sm">{err}</p>}
-    <div className="card space-y-3"><h2 className="font-bold">تصدير نسخة احتياطية</h2><p className="text-sm text-slate-500">ملفات UTF-8 تفتح في Excel بالعربية. تحتوي على بيانات المرضى كاملة بما فيها الملاحظات الخاصة، احتفظي بها في مكان آمن.</p><div className="flex flex-wrap gap-2"><button className="btn btn-o" onClick={() => exportCsv('patients', patients)}>المرضى (CSV)</button><button className="btn btn-o" onClick={() => exportCsv('visits', visits)}>الزيارات (CSV)</button><button className="btn btn-o" onClick={() => exportJson(patients, visits)}>الكل (JSON)</button></div></div></main>);
+    <div className="card space-y-3"><h2 className="font-bold">تصدير بيانات العيادة</h2><p className="text-sm text-slate-500">ملف Excel منسق بالعربية (ملخص العيادة، سجل المريضات، سجل الزيارات). يحتوي على بيانات المرضى، احتفظي به في مكان آمن.</p>
+      <div className="flex flex-wrap items-center gap-3"><button className="btn" disabled={xBusy} onClick={async () => { setXErr(''); setXBusy(true); try { await exportClinicExcel({ patients, visits, settings, includePrivate: incPriv }); } catch (x: any) { setXErr('تعذر إنشاء الملف: ' + (x?.message || '')); } setXBusy(false); }}>{xBusy ? 'جارٍ التجهيز…' : 'تصدير بيانات العيادة (Excel)'}</button>
+        <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={incPriv} onChange={(e) => setIncPriv(e.target.checked)} />تضمين الملاحظات الخاصة للدكتورة</label></div>{xErr && <p className="text-red-600 text-sm">{xErr}</p>}</div></main>);
 }

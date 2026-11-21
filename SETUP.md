@@ -19,3 +19,7 @@ Logo: uploaded images are resized/compressed in the browser to fit one Sheets ce
 - Public API paths in middleware: /api/auth, /api/branding, /api/manifest.webmanifest, /api/icon. No new env vars.
 - The service worker registers only in production: test with `npm run build && npm start`, then DevTools > Network > Offline.
 - Patient file route changed to `/patients?id=<uuid|new>` so it can be served offline.
+
+## v4: Excel export + A4 report
+- Settings: one "تصدير بيانات العيادة (Excel)" button (exceljs, lazy-loaded browser bundle, fully offline). Private notes only if the checkbox is ticked.
+- Patient profile (Doctor mode): "تقرير طبي (PDF)" opens an A4 report; use the browser's Print > Save as PDF (works offline, Arabic shaping handled by the browser). Private notes are excluded unless toggled.

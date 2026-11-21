@@ -6,6 +6,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } f
 import { useApp } from '@/context/AppContext';
 import { pregnancy, abnormalBP, gaText } from '@/lib/medical';
 import PrescriptionModal from '@/components/PrescriptionModal';
+import PatientReportModal from '@/components/PatientReportModal';
 import FetalMonitorSection from '@/components/FetalMonitorSection';
 import { FetalGrowth, VisitTimeline } from '@/components/FetalCharts';
 import { parseFetal } from '@/lib/fetal';
@@ -17,7 +18,7 @@ function PatientPage() {
   const { patients, visits, settings, role, savePatient, saveVisit, saveSettings, authed, checking } = useApp();
   const [p, setP] = useState<any>({ isFirstPregnancy: 'false', gravida: 0, para: 0, abortus: 0 });
   const [v, setV] = useState<any>({ visitDate: today() });
-  const [showPriv, setShowPriv] = useState(false); const [rx, setRx] = useState(false); const [busy, setBusy] = useState(false);
+  const [showPriv, setShowPriv] = useState(false); const [rx, setRx] = useState(false); const [report, setReport] = useState(false); const [busy, setBusy] = useState(false);
   const found = patients.find((x: any) => x.id === id);
   useEffect(() => { if (found) setP((o: any) => (o.id === found.id ? o : found)); }, [found]);
   useEffect(() => { if (!checking && !authed) router.replace('/'); }, [checking, authed, router]);
@@ -70,14 +71,15 @@ function PatientPage() {
   };
   const shown = layout.order.filter((k: string) => TITLES[k] && (isDoc || k === 'basic'));
   return (<main className="max-w-3xl mx-auto p-4 space-y-3">
-    <button className="text-sm" style={{ color: 'var(--primary)' }} onClick={() => router.push('/')}>← القائمة</button>
+    <div className="flex items-center justify-between"><button className="text-sm" style={{ color: 'var(--primary)' }} onClick={() => router.push('/')}>← القائمة</button>{isDoc && p.id && <button className="btn btn-o" onClick={() => setReport(true)}><FileText size={16} />تقرير طبي (PDF)</button>}</div>
     {last && isDoc && <div className="rounded-xl p-4 text-white" style={{ background: 'var(--primary)' }}><div className="font-bold">آخر زيارة كانت {weeksAgo < 1 ? 'منذ أقل من أسبوع' : `منذ ${weeksAgo} أسابيع`}</div>
       {last.nextVisitRequests && <div>المطلوب رؤيته اليوم: {last.nextVisitRequests}</div>}</div>}
     {shown.map((k: string) => (<section key={k} className="card"><div className="flex items-center gap-1"><button className="flex-1 text-start font-bold flex items-center gap-2" onClick={() => toggle(k)}>{layout.collapsed[k] ? <ChevronDown size={18} /> : <ChevronUp size={18} />}{TITLES[k]}</button>
       {isDoc && <><button aria-label="أعلى" onClick={() => move(k, -1)}><ArrowUp size={16} /></button><button aria-label="أسفل" onClick={() => move(k, 1)}><ArrowDown size={16} /></button></>}</div>
       {!layout.collapsed[k] && <div className="mt-3">{body[k]}</div>}</section>))}
     <button className="btn" disabled={busy} onClick={save}>{busy ? 'جارٍ الحفظ…' : 'حفظ'}</button>
-    {rx && <PrescriptionModal patient={p} visit={v} onClose={() => setRx(false)} />}</main>);
+    {rx && <PrescriptionModal patient={p} visit={v} onClose={() => setRx(false)} />}
+    {report && isDoc && <PatientReportModal patient={p} visits={mine} onClose={() => setReport(false)} />}</main>);
 }
 
 export default function Page() { return <Suspense fallback={null}><PatientPage /></Suspense>; }

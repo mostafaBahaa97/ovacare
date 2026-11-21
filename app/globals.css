@@ -14,3 +14,16 @@ body { background:var(--bg); color:#1e293b; }
 .btn, .seg { transition:all .15s; }
 .seg { padding:.35rem .85rem; border-radius:999px; border:1px solid #e2e8f0; background:#fff; font-size:.85rem; }
 .seg[aria-pressed="true"] { background:var(--primary); color:var(--primary-fg); border-color:var(--primary); }
+/* A4 report / prescription printing */
+.print-sheet { width:210mm; max-width:100%; margin:0 auto; background:#fff; padding:12mm; border-radius:6px; box-shadow:0 8px 30px #0003; color:#0f172a; font-size:12px; line-height:1.55; }
+.rpt-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+.rpt-table th { background:var(--primary); color:#fff; padding:5px 6px; font-size:11px; text-align:right; }
+.rpt-table td { padding:6px; border-bottom:1px solid #e2e8f0; vertical-align:top; font-size:11px; }
+@media print {
+  * { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  body.has-print-portal > *:not(.print-portal) { display:none !important; }
+  .print-portal > * { position:static !important; inset:auto !important; overflow:visible !important; background:#fff !important; padding:0 !important; }
+  .print-sheet { width:auto; padding:0; border-radius:0; box-shadow:none; }
+  .rpt-row, .rpt-table tr { break-inside:avoid; page-break-inside:avoid; }
+  .rpt-table thead { display:table-header-group; }
+}
