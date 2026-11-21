@@ -4,6 +4,7 @@ import { useApp } from '@/context/AppContext';
 import OvaCareLogo from './OvaCareLogo';
 import { pregnancy, gaText } from '@/lib/medical';
 import { waNumber } from '@/lib/phone';
+import PrintPortal from './PrintPortal';
 export default function PrescriptionModal({ patient, visit, onClose }: any) {
   const { settings: s } = useApp();
   const ga = gaText(pregnancy(patient.lmpDate));
@@ -16,7 +17,7 @@ export default function PrescriptionModal({ patient, visit, onClose }: any) {
     window.open(`https://wa.me/${ph}?text=${encodeURIComponent(t)}`, '_blank');
   };
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 overflow-auto p-4 print:static print:bg-white print:p-0">
+    <PrintPortal><div className="fixed inset-0 z-50 bg-black/50 overflow-auto p-4 print:static print:bg-white print:p-0">
       <div className="no-print max-w-2xl mx-auto mb-3 flex gap-2">
         <button className="btn" onClick={() => window.print()}><Printer size={18} />طباعة / PDF</button>
         <button className="btn btn-o" onClick={wa}><MessageCircle size={18} />واتساب</button>
@@ -40,6 +41,6 @@ export default function PrescriptionModal({ patient, visit, onClose }: any) {
           <footer className="border-t pt-2 mt-6 text-center text-xs text-slate-500">{s.doctorName} — {s.clinicTitle}</footer>
         </div>
       </div>
-    </div>
+    </div></PrintPortal>
   );
 }
